@@ -21,10 +21,6 @@
         <li><a class="nav-link text-white" href="cart.html">Cart</a></li>
     </ul>
 
-    <form class="d-flex mx-3 search-box">
-        <input class="form-control" type="search" placeholder="Search accessories...">
-    </form>
-
     <div class="d-flex gap-2">
         <a href="login.html" class="btn btn-outline-light">Login</a>
         <a href="signup.html" class="btn btn-primary">Sign Up</a>
@@ -47,31 +43,54 @@
 <script src="cart.js"></script>
 
 <script>
-async function loadProducts() {
-    try {
-        const res = await fetch("http://localhost:3000/api/products");
-        const products = await res.json();
 
-        const container = document.getElementById("product-list");
-        container.innerHTML = "";
+const products = [
+    { name: "Headphones", price: 59.99 },
+    { name: "Smart Watch", price: 99.99 },
+    { name: "Mouse", price: 29.99 },
+    { name: "Keyboard", price: 79.99 },
+    { name: "USB-C Cable", price: 9.99 },
+    { name: "Laptop Stand", price: 24.99 },
+    { name: "Speaker", price: 39.99 },
+    { name: "Phone Holder", price: 14.99 },
+    { name: "Webcam", price: 49.99 },
+    { name: "External SSD", price: 119.99 },
+    { name: "Power Bank", price: 34.99 },
+    { name: "Monitor", price: 199.99 },
+    { name: "Tablet", price: 249.99 },
+    { name: "Phone Case", price: 12.99 },
+    { name: "Charger", price: 19.99 },
+    { name: "Earbuds", price: 149.99 }
+];
 
-        products.forEach(product => {
-            container.innerHTML += `
-                <div class="col-md-3">
-                    <div class="card p-3 text-center h-100">
-                        <h5>${product.name}</h5>
-                        <p>$${product.price}</p>
-                        <button class="btn btn-primary"
-                            onclick="addToCart('${product.name}', ${product.price})">
-                            Add to Cart
-                        </button>
-                    </div>
+const token = localStorage.getItem("token");
+
+function renderProducts(list) {
+    const container = document.getElementById("product-list");
+    container.innerHTML = "";
+
+    list.forEach(product => {
+        container.innerHTML += `
+            <div class="col-md-3">
+                <div class="card p-3 text-center h-100">
+                    <h5>${product.name}</h5>
+                    <p>$${product.price}</p>
+                    <button class="btn btn-primary"
+                        onclick="addToCart('${product.name}', ${product.price})">
+                        Add to Cart
+                    </button>
                 </div>
-            `;
-        });
+            </div>
+        `;
+    });
+}
 
+function loadProducts() {
+    try {
+        renderProducts(products);
     } catch (err) {
-        console.error("Error loading products:", err);
+        console.error(err);
+        alert("Failed to load products");
     }
 }
 

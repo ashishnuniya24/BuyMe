@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-
-// ➕ ADD PRODUCT
 router.post("/", async (req, res) => {
   try {
     const { name, description, price } = req.body;
@@ -20,7 +18,6 @@ router.post("/", async (req, res) => {
 });
 
 
-// 📦 GET ALL PRODUCTS
 router.get("/", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM products ORDER BY id DESC");
@@ -31,7 +28,6 @@ router.get("/", async (req, res) => {
 });
 
 
-// ❌ DELETE PRODUCT
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;

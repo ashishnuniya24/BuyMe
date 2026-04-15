@@ -12,7 +12,6 @@ app.get("/", (req, res) => {
   res.send("BuyMe API is running 🚀");
 });
 
-// Routes (we will build these next)
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/products", require("./routes/productRoutes"));
 
