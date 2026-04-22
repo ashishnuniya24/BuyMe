@@ -30,3 +30,18 @@ INSERT INTO products (name, price) VALUES
 ('Phone Case', 12.99),
 ('Charger', 19.99),
 ('Earbuds', 149.99);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    total NUMERIC(10,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(id),
+    product_id INTEGER REFERENCES products(id),
+    quantity INTEGER,
+    price NUMERIC(10,2)
+);

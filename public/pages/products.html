@@ -21,6 +21,16 @@
         <li><a class="nav-link text-white" href="cart.html">Cart</a></li>
     </ul>
 
+    <form class="d-flex mx-3 search-box">
+        <input 
+            id="searchInput"
+            class="form-control" 
+            type="search" 
+            placeholder="Search accessories..."
+            onkeyup="filterProducts()"
+        >
+    </form>
+
     <div class="d-flex gap-2">
         <a href="login.html" class="btn btn-outline-light">Login</a>
         <a href="signup.html" class="btn btn-primary">Sign Up</a>
@@ -63,8 +73,6 @@ const products = [
     { name: "Earbuds", price: 149.99 }
 ];
 
-const token = localStorage.getItem("token");
-
 function renderProducts(list) {
     const container = document.getElementById("product-list");
     container.innerHTML = "";
@@ -85,16 +93,22 @@ function renderProducts(list) {
     });
 }
 
+function filterProducts() {
+    const value = document.getElementById("searchInput").value.toLowerCase();
+
+    const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(value)
+    );
+
+    renderProducts(filtered);
+}
+
 function loadProducts() {
-    try {
-        renderProducts(products);
-    } catch (err) {
-        console.error(err);
-        alert("Failed to load products");
-    }
+    renderProducts(products);
 }
 
 loadProducts();
+
 </script>
 
 </body>

@@ -46,8 +46,10 @@
 
 </div>
 
+<script src="js/auth.js"></script>
+
 <script>
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
+document.getElementById("signupForm").addEventListener("submit", (e) => {
     e.preventDefault();
 
     const inputs = document.querySelectorAll("#signupForm input");
@@ -56,28 +58,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     const email = inputs[1].value;
     const password = inputs[2].value;
 
-    try {
-        const res = await fetch("http://localhost:3000/api/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ name, email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            alert("Signup successful 🚀");
-            window.location.href = "login.html";
-        } else {
-            alert(data.error || "Signup failed");
-        }
-
-    } catch (err) {
-        alert("Server error");
-        console.error(err);
-    }
+    signup(name, email, password);
 });
 </script>
 

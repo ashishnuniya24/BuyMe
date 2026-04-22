@@ -41,6 +41,7 @@
     <h4 class="text-center mt-4" id="total"></h4>
 
     <div class="text-center mt-3">
+        <button class="btn btn-success" onclick="placeOrder()">Place Order</button>
         <button class="btn btn-danger" onclick="clearCart()">Clear Cart</button>
     </div>
 
@@ -91,6 +92,40 @@ function displayCart() {
     });
 
     totalElement.innerText = "Total: $" + total.toFixed(2);
+}
+
+async function placeOrder() {
+    const cart = getCart();
+
+    if (cart.length === 0) {
+        alert("Cart is empty");
+        return;
+    }
+
+    const user_id = 1;
+
+    try {
+        const response = await fetch("http://localhost:3000/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id,
+                items: cart
+            })
+        });
+
+        const data = await response.json();
+
+        alert("Order placed successfully");
+
+        localStorage.removeItem("cart");
+        displayCart();
+
+    } catch (err) {
+        alert("Error placing order");
+    }
 }
 
 displayCart();
