@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-    res.send("BuyMe API is running 🚀");
+    res.send("BuyMe API is running...");
 });
 
 app.get("/db-test", async (req, res) => {
