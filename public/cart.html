@@ -24,6 +24,7 @@
                 <li class="nav-item"><a class="nav-link nav-pill" href="index.html">Home</a></li>
                 <li class="nav-item"><a class="nav-link nav-pill" href="products.html">Products</a></li>
                 <li class="nav-item"><a class="nav-link active nav-pill" href="cart.html">Cart <span id="cart-count" class="badge rounded-pill text-bg-light d-none">0</span></a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="wishlist.html">Wishlist <span id="wishlist-count" class="badge rounded-pill text-bg-light d-none">0</span></a></li>
                 <li class="nav-item"><a class="nav-link nav-pill" href="feedback.html">Feedback</a></li>
             </ul>
 
@@ -46,6 +47,27 @@
     <h2 class="fw-bold text-center mb-4">Your Cart</h2>
     <div id="cart-items" class="row g-3"></div>
     <h4 class="text-center mt-4" id="total"></h4>
+    <div id="order-success-message" class="alert alert-success text-center mt-4 d-none" role="status"></div>
+
+    <div id="checkout-panel" class="checkout-panel card border-0 shadow-sm p-4 mt-4 mx-auto">
+        <h5 class="fw-bold mb-3">Choose Payment Method</h5>
+        <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label for="payment-method" class="form-label">Payment Method</label>
+                <select id="payment-method" class="form-select">
+                    <option value="">Select payment method</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Klarna">Klarna</option>
+                    <option value="Cash on Delivery">Cash on Delivery</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-grid">
+                <button id="place-order-btn" class="btn btn-primary" onclick="placeOrder()">Place Order</button>
+            </div>
+        </div>
+        <p id="checkout-status" class="small mb-0 mt-3 text-center"></p>
+    </div>
 
     <div class="text-center mt-3">
         <button class="btn btn-danger" onclick="clearCart()">Clear Cart</button>
@@ -59,10 +81,153 @@
 <script src="cart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+const apiBase = window.location.port === "5500" || window.location.protocol === "file:" ? "http://localhost:3000" : "";
+
+function getFallbackProductImage(product) {
+    const [primary, secondary] = product.colors || ["#0d6efd", "#8ec5ff"];
+    const label = product.name.length > 16 ? `${product.name.slice(0, 13)}...` : product.name;
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="${product.name}">
+            <defs>
+                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="${primary}" />
+                    <stop offset="100%" stop-color="${secondary}" />
+                </linearGradient>
+            </defs>
+            <rect width="640" height="480" rx="40" fill="url(#g)" />
+            <circle cx="500" cy="120" r="72" fill="rgba(255,255,255,0.15)" />
+            <circle cx="160" cy="360" r="98" fill="rgba(255,255,255,0.12)" />
+            <rect x="110" y="110" width="420" height="210" rx="36" fill="rgba(255,255,255,0.18)" />
+            <rect x="150" y="150" width="340" height="130" rx="28" fill="rgba(255,255,255,0.88)" />
+            <text x="320" y="230" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="${primary}">${label}</text>
+            <text x="320" y="380" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="white" letter-spacing="6">BUYME</text>
+        </svg>`;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function getCurrentUserId() {
+    const storedUser = localStorage.getItem("currentUser");
+
+    if (storedUser) {
+        try {
+            const user = JSON.parse(storedUser);
+            if (user.id) {
+                return user.id;
+            }
+        } catch (err) {
+            console.error("Failed to read currentUser", err);
+        }
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        return null;
+    }
+
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        return payload.id || null;
+    } catch (err) {
+        console.error("Failed to decode token", err);
+        return null;
+    }
+}
+
+function setCheckoutStatus(message, tone = "muted") {
+    const status = document.getElementById("checkout-status");
+
+    if (!status) {
+        return;
+    }
+
+    status.className = `small mb-0 mt-3 text-center ${tone}`;
+    status.textContent = message;
+}
+
+function setOrderSuccessMessage(message = "") {
+    const successMessage = document.getElementById("order-success-message");
+
+    if (!successMessage) {
+        return;
+    }
+
+    if (!message) {
+        successMessage.textContent = "";
+        successMessage.classList.add("d-none");
+        return;
+    }
+
+    successMessage.textContent = message;
+    successMessage.classList.remove("d-none");
+}
+
+async function placeOrder() {
+    const cart = getCart();
+    const paymentMethod = document.getElementById("payment-method").value;
+    const placeOrderButton = document.getElementById("place-order-btn");
+    const userId = getCurrentUserId();
+
+    if (!cart.length) {
+        setCheckoutStatus("Your cart is empty.", "text-danger");
+        return;
+    }
+
+    if (!paymentMethod) {
+        setCheckoutStatus("Please select a payment method.", "text-danger");
+        return;
+    }
+
+    if (!userId) {
+        setCheckoutStatus("Please login before placing an order.", "text-danger");
+        return;
+    }
+
+    placeOrderButton.disabled = true;
+    setCheckoutStatus("Placing your order...", "text-primary");
+
+    try {
+        const response = await fetch(`${apiBase}/api/orders`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: userId,
+                payment_method: paymentMethod,
+                items: cart.map((item) => ({
+                    id: item.id,
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price
+                }))
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to place order");
+        }
+
+        setCheckoutStatus(`Order placed with ${data.paymentMethod}.`, "text-success");
+        setOrderSuccessMessage(`Order done. Your order was placed successfully with ${data.paymentMethod}.`);
+        document.getElementById("payment-method").value = "";
+        clearCart();
+    } catch (err) {
+        console.error(err);
+        setOrderSuccessMessage("");
+        setCheckoutStatus(err.message || "Failed to place order.", "text-danger");
+    } finally {
+        placeOrderButton.disabled = getCart().length === 0;
+    }
+}
+
 function displayCart() {
     let cart = getCart();
     let container = document.getElementById("cart-items");
     let totalElement = document.getElementById("total");
+    let checkoutPanel = document.getElementById("checkout-panel");
+    let placeOrderButton = document.getElementById("place-order-btn");
 
     container.innerHTML = "";
     let total = 0;
@@ -70,15 +235,26 @@ function displayCart() {
     if (cart.length === 0) {
         container.innerHTML = "<p class='text-center'>Your cart is empty</p>";
         totalElement.innerText = "";
+        checkoutPanel.classList.add("d-none");
+        placeOrderButton.disabled = true;
         return;
     }
 
+    setOrderSuccessMessage("");
+    checkoutPanel.classList.remove("d-none");
+    placeOrderButton.disabled = false;
+
     cart.forEach((item, index) => {
         total += item.price * item.quantity;
+        const fallbackImage = getFallbackProductImage(item);
+        const image = item.image || fallbackImage;
 
         container.innerHTML += `
             <div class="col-md-4">
                 <div class="card p-3 text-center h-100">
+                    <div class="product-image-wrap mb-3">
+                        <img class="product-image" src="${image}" alt="${item.name}" data-fallback="${fallbackImage}" onerror="this.onerror=null;this.src=this.dataset.fallback;">
+                    </div>
                     <h5>${item.name}</h5>
                     <p>$${item.price}</p>
                     <div class="d-flex justify-content-center align-items-center gap-2">
