@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - BuyMe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark site-navbar sticky-top px-3 px-lg-4 py-3">
+    <div class="container-fluid px-0">
+        <a class="navbar-brand fw-bold" href="index.html">BuyMe</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="siteNav">
+            <ul class="navbar-nav mx-auto align-items-lg-center gap-lg-3">
+                <li class="nav-item"><a class="nav-link nav-pill" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="cart.html">Cart <span id="cart-count" class="badge rounded-pill text-bg-light d-none">0</span></a></li>
+                <li class="nav-item"><a class="nav-link active nav-pill" href="feedback.html">Feedback</a></li>
+            </ul>
+
+            <form class="site-search js-nav-search-form me-lg-3" autocomplete="off">
+                <div class="input-group">
+                    <input type="search" class="form-control js-nav-search-input" placeholder="Search products">
+                    <button type="submit" class="btn btn-light text-primary">Search</button>
+                </div>
+            </form>
+
+            <div class="d-flex gap-2 site-actions">
+                <a href="login.html" class="btn btn-outline-light">Login</a>
+                <a href="signup.html" class="btn btn-info text-dark">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="container feedback-shell">
+    <div class="row g-4 align-items-start">
+        <div class="col-lg-5">
+            <div class="feedback-card p-4 p-lg-5">
+                <h2 class="fw-bold mb-3">Feedback And Reports</h2>
+                <p class="text-muted mb-4">Send general feedback, report a problem, or flag inappropriate content.</p>
+
+                <form id="feedback-form">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" id="feedback-name" class="form-control" placeholder="Your name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="feedback-email" class="form-control" placeholder="you@example.com" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select id="feedback-type" class="form-select" required>
+                            <option value="General Feedback">General Feedback</option>
+                            <option value="Bug Report">Bug Report</option>
+                            <option value="Inappropriate Content">Inappropriate Content</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea id="feedback-message" class="form-control" rows="5" placeholder="Describe the issue or feedback" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="feedback-list-card p-4 p-lg-5">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <div>
+                        <h3 class="fw-bold mb-1">Recent Feedback</h3>
+                        <p class="text-muted mb-0">Stored locally for this project demo.</p>
+                    </div>
+                    <button id="clear-feedback" class="btn btn-outline-secondary btn-sm">Clear All</button>
+                </div>
+
+                <div id="feedback-list" class="feedback-list"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer text-center py-3">
+    © 2026 BuyMe. All rights reserved.
+</footer>
+
+<script src="cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function getStoredFeedback() {
+    return JSON.parse(localStorage.getItem("buymeFeedback") || "[]");
+}
+
+function saveStoredFeedback(entries) {
+    localStorage.setItem("buymeFeedback", JSON.stringify(entries));
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function renderFeedback() {
+    const list = document.getElementById("feedback-list");
+    const entries = getStoredFeedback();
+
+    if (!entries.length) {
+        list.innerHTML = '<p class="comment-empty mb-0">No feedback submitted yet.</p>';
+        return;
+    }
+
+    list.innerHTML = entries.map((entry) => `
+        <article class="feedback-entry">
+            <div class="feedback-entry-header">
+                <div>
+                    <strong>${escapeHtml(entry.name)}</strong>
+                    <div class="comment-meta">${escapeHtml(entry.email)}</div>
+                </div>
+                <div class="text-end">
+                    <span class="feedback-tag">${escapeHtml(entry.type)}</span>
+                    <div class="comment-meta mt-1">${escapeHtml(entry.createdAt)}</div>
+                </div>
+            </div>
+            <p class="mb-0">${escapeHtml(entry.message)}</p>
+        </article>
+    `).join("");
+}
+
+document.getElementById("feedback-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const entry = {
+        name: document.getElementById("feedback-name").value.trim(),
+        email: document.getElementById("feedback-email").value.trim(),
+        type: document.getElementById("feedback-type").value,
+        message: document.getElementById("feedback-message").value.trim(),
+        createdAt: new Date().toLocaleString()
+    };
+
+    const entries = getStoredFeedback();
+    entries.unshift(entry);
+    saveStoredFeedback(entries);
+    event.currentTarget.reset();
+    renderFeedback();
+});
+
+document.getElementById("clear-feedback").addEventListener("click", () => {
+    localStorage.removeItem("buymeFeedback");
+    renderFeedback();
+});
+
+renderFeedback();
+</script>
+
+</body>
+</html>
