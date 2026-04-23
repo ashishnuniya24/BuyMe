@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
-["index", "products", "cart", "login", "signup", "feedback"].forEach((pageName) => {
+["index", "products", "cart", "wishlist", "login", "signup", "feedback"].forEach((pageName) => {
     app.get(`/${pageName}.html`, (req, res) => {
         res.sendFile(path.join(__dirname, "..", "public", `${pageName}.html`));
     });
