@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - BuyMe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark site-navbar sticky-top px-3 px-lg-4 py-3">
+    <div class="container-fluid px-0">
+        <a class="navbar-brand fw-bold" href="index.html">BuyMe</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="siteNav">
+            <ul class="navbar-nav mx-auto align-items-lg-center gap-lg-3">
+                <li class="nav-item"><a class="nav-link nav-pill" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link active nav-pill" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="cart.html">Cart <span id="cart-count" class="badge rounded-pill text-bg-light d-none">0</span></a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="feedback.html">Feedback</a></li>
+            </ul>
+
+            <form class="site-search js-nav-search-form me-lg-3" autocomplete="off">
+                <div class="input-group">
+                    <input id="nav-search-input" type="search" class="form-control js-nav-search-input" placeholder="Search products">
+                    <button type="submit" class="btn btn-light text-primary">Search</button>
+                </div>
+            </form>
+
+            <div class="d-flex gap-2 site-actions">
+                <a href="login.html" class="btn btn-outline-light">Login</a>
+                <a href="signup.html" class="btn btn-info text-dark">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="container py-5">
+    <h2 class="text-center mb-4 fw-bold">Our Products</h2>
+    <p id="search-status" class="search-status text-center mb-4"></p>
+    <p id="cart-status" class="text-success text-center small mb-4 d-none"></p>
+    <div class="row g-4" id="product-list"></div>
+</section>
+
+<div class="modal fade" id="product-details-modal" tabindex="-1" aria-labelledby="product-details-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="product-details-title">Product Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="product-details-body"></div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer text-center py-3">
+    © 2026 BuyMe. All rights reserved.
+</footer>
+
+<script src="cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const productVisuals = {
+    "Headphones": { image: "https://static.elisa.com/v2/image/2tqybbhjs47b/5RmJKFGCCBgbtcju1NYGnR/WH-CH520+Bluetooth+kuuloke+Sininen.jpeg?w=800&fm=avif&env=master&q=75", colors: ["#0d6efd", "#56ccf2"] },
+    "Smart Watch": { image: "https://teknikspot.shop/cdn/shop/files/Xiaomi_smart_band_9_mystic_rose1.webp?v=1762098745&width=493", colors: ["#0b2348", "#3cc8ff"] },
+    "Mouse": { image: "https://static.elisa.com/v2/image/2tqybbhjs47b/2FzjzMaM8aKil9McXFkbxN/Signature+M650+-langaton+hiiri+Graphite.jpeg?w=800&fm=avif&env=master&q=75", colors: ["#2f80ed", "#6dd5fa"] },
+    "Keyboard": { image: "https://cdn.verk.net/kuvastin/w:1125/h:703/rt:fit/q:80/ex:1/sh:0.5/plain/images/15/2_1018847-1280x509.jpg", colors: ["#1d4ed8", "#38bdf8"] },
+    "USB-C Cable": { image: "https://i0.wp.com/shop.huvipiste.fi/wp-content/uploads/2024/10/MU2G3ZM-cde.png?w=812&ssl=1", colors: ["#2563eb", "#93c5fd"] },
+    "Laptop Stand": { image: "https://cdnprod.inky.se/medias/sys_master/root/hd1/hfb/10411286691870/5030578458823.webp", colors: ["#0891b2", "#67e8f9"] },
+    "Speaker": { image: "https://noerdic.fi/cdn/shop/files/Bluetoothkaiutin36WkannettavakaiutinstereonipohjallaBluetooth53langatonIP7xvedenpitvkaiutinsininenBluetoothKaiutin36WKannettavaKaiutinStereonipohjallaBluetooth53LangatonIp7XVedenpitvK.jpg?v=1763654411&width=1000", colors: ["#7c3aed", "#60a5fa"] },
+    "Phone Holder": { image: "https://gsmnet.fi/cdn/shop/files/suport-birou-hoco-excelente-1-1614602508.jpg?v=1772639527&width=493", colors: ["#0f766e", "#5eead4"] },
+    "Webcam": { image: "https://noerdic.fi/cdn/shop/files/4KWebcamHD8MPSonySensorAutofocusMicrophonePrivacyCoverandTripod4KWebcamHd8MpSonySensorAutofocusMicrophonePrivacyCoverAndTripod_a5558062-6f91-4284-97f9-0bd10b36a976.jpg?v=1763654745&width=800", colors: ["#4338ca", "#93c5fd"] },
+    "External SSD": { image: "https://cdnprod.inky.se/medias/sys_master/root/h57/hb7/10789642600478/TS2TSJ25M3S.webp", colors: ["#1e3a8a", "#60a5fa"] },
+    "Power Bank": { image: "https://cdnprod.inky.se/medias/sys_master/root/hd4/h13/10789496389662/406020.webp", colors: ["#0369a1", "#7dd3fc"] },
+    "Monitor": { image: "https://tkvfinland.fi/wp-content/uploads/2025/04/IMG_0276.webp", colors: ["#1f2937", "#60a5fa"] },
+    "Tablet": { image: "https://i0.wp.com/tradeup.fi/wp-content/uploads/2021/12/ipad-7-wifi-cellular.png?w=600&ssl=1", colors: ["#312e81", "#38bdf8"] },
+    "Phone Case": { image: "https://gsmnet.fi/cdn/shop/files/husa-magsafe-pentru-apple-iphone-17-pro-max-techsuit-halofrost-ii-portocalie-1762255595591.jpg?v=1762872733&width=493", colors: ["#0f172a", "#38bdf8"] },
+    "Charger": { image: "https://static.elisa.com/v2/image/2tqybbhjs47b/7LvpqyuD2C4DrISFJ5yKR9/45W+Power+Charger+%2B+C+to+C-Kaapeli+%282024%29.jpeg?w=800&fm=avif&env=master&q=75", colors: ["#1d4ed8", "#22d3ee"] },
+    "Earbuds": { image: "https://ptron.in/cdn/shop/files/B0CNZD2DMS.MAIN.jpg?v=1709619012", colors: ["#4f46e5", "#818cf8"] }
+};
+
+const navSearchInput = document.getElementById("nav-search-input");
+const searchStatus = document.getElementById("search-status");
+const cartStatus = document.getElementById("cart-status");
+const productDetailsModalElement = document.getElementById("product-details-modal");
+const productDetailsTitle = document.getElementById("product-details-title");
+const productDetailsBody = document.getElementById("product-details-body");
+const apiBase = window.location.port === "5500" || window.location.protocol === "file:" ? "http://localhost:3000" : "";
+let products = [];
+let activeProductName = null;
+let cartStatusTimer;
+
+function renderProducts(list) {
+    const container = document.getElementById("product-list");
+    container.innerHTML = "";
+
+    if (list.length === 0) {
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="card p-4 text-center">
+                    <h5 class="mb-2">No products found</h5>
+                    <p class="mb-0 text-muted">Try a different keyword.</p>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    list.forEach((product) => {
+        const image = getProductImageData(product);
+        const safeName = escapeHtml(product.name);
+        const encodedName = encodeURIComponent(product.name);
+
+        container.innerHTML += `
+            <div class="col-sm-6 col-lg-3">
+                <div class="card p-3 text-center h-100 product-card-clickable"
+                    role="button"
+                    tabindex="0"
+                    onclick="openProductDetails('${encodedName}')"
+                    onkeydown="handleProductCardKeydown(event, '${encodedName}')">
+                    <div class="product-image-wrap">
+                        <img class="product-image" src="${image}" alt="${safeName}" data-product-name="${safeName}" data-product-colors='${JSON.stringify(product.colors || [])}'>
+                    </div>
+                    <h5>${safeName}</h5>
+                    <p>$${Number(product.price).toFixed(2)}</p>
+                    <button class="btn btn-primary" onclick='event.stopPropagation(); handleAddToCart(${JSON.stringify(product.name)}, ${Number(product.price)})'>Add to Cart</button>
+                </div>
+            </div>
+        `;
+    });
+
+    attachImageFallbacks();
+}
+
+function getProductImageData(product) {
+    if (product.image) {
+        return product.image;
+    }
+
+    return getFallbackProductImage(product);
+}
+
+function getFallbackProductImage(product) {
+    const [primary, secondary] = product.colors || ["#0d6efd", "#8ec5ff"];
+    const label = product.name.length > 16 ? `${product.name.slice(0, 13)}...` : product.name;
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="${product.name}">
+            <defs>
+                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="${primary}" />
+                    <stop offset="100%" stop-color="${secondary}" />
+                </linearGradient>
+            </defs>
+            <rect width="640" height="480" rx="40" fill="url(#g)" />
+            <circle cx="500" cy="120" r="72" fill="rgba(255,255,255,0.15)" />
+            <circle cx="160" cy="360" r="98" fill="rgba(255,255,255,0.12)" />
+            <rect x="110" y="110" width="420" height="210" rx="36" fill="rgba(255,255,255,0.18)" />
+            <rect x="150" y="150" width="340" height="130" rx="28" fill="rgba(255,255,255,0.88)" />
+            <text x="320" y="230" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="${primary}">${label}</text>
+            <text x="320" y="380" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="white" letter-spacing="6">BUYME</text>
+        </svg>`;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function attachImageFallbacks() {
+    document.querySelectorAll(".product-image").forEach((image) => {
+        if (image.dataset.fallbackBound === "true") {
+            return;
+        }
+
+        image.dataset.fallbackBound = "true";
+        image.onerror = () => {
+            image.onerror = null;
+            image.src = getFallbackProductImage({
+                name: image.dataset.productName,
+                colors: image.dataset.productColors ? JSON.parse(image.dataset.productColors) : undefined
+            });
+        };
+    });
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function getLikedProducts() {
+    return JSON.parse(localStorage.getItem("likedProducts") || "{}");
+}
+
+function saveLikedProducts(likedProducts) {
+    localStorage.setItem("likedProducts", JSON.stringify(likedProducts));
+}
+
+function isProductLiked(productName) {
+    return Boolean(getLikedProducts()[productName]);
+}
+
+function getLikeCount(productName) {
+    return isProductLiked(productName) ? 1 : 0;
+}
+
+function toggleLike(encodedName) {
+    const productName = decodeURIComponent(encodedName);
+    const likedProducts = getLikedProducts();
+
+    if (likedProducts[productName]) {
+        delete likedProducts[productName];
+    } else {
+        likedProducts[productName] = true;
+    }
+
+    saveLikedProducts(likedProducts);
+    refreshActiveProductDetails(productName);
+}
+
+function getProductComments() {
+    return JSON.parse(localStorage.getItem("productComments") || "{}");
+}
+
+function saveProductComments(comments) {
+    localStorage.setItem("productComments", JSON.stringify(comments));
+}
+
+function getCommentsForProduct(productName) {
+    const comments = getProductComments();
+    return comments[productName] || [];
+}
+
+function renderCommentsMarkup(productName) {
+    const comments = getCommentsForProduct(productName);
+
+    if (!comments.length) {
+        return '<p class="comment-empty mb-0">No comments yet. Start the discussion.</p>';
+    }
+
+    return comments.map((comment, index) => `
+        <div class="comment-item">
+            <div class="comment-item-header">
+                <div>
+                    <p>${escapeHtml(comment.text)}</p>
+                    <div class="comment-meta">${escapeHtml(comment.createdAt)}</div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteComment('${encodeURIComponent(productName)}', ${index})">Delete</button>
+            </div>
+        </div>
+    `).join("");
+}
+
+function buildProductDetailsMarkup(product) {
+    const encodedName = encodeURIComponent(product.name);
+    const image = getProductImageData(product);
+    const safeName = escapeHtml(product.name);
+    const likeCount = getLikeCount(product.name);
+    const commentCount = getCommentsForProduct(product.name).length;
+
+    return `
+        <div class="row g-4 align-items-start">
+            <div class="col-md-5">
+                <div class="product-detail-image-wrap">
+                    <img class="product-image" src="${image}" alt="${safeName}" data-product-name="${safeName}" data-product-colors='${JSON.stringify(product.colors || [])}'>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="product-detail-meta">
+                    <h3 class="fw-bold mb-2">${safeName}</h3>
+                    <p class="fs-4 text-primary fw-semibold mb-3">$${Number(product.price).toFixed(2)}</p>
+                    <p class="text-muted mb-4">Open the product details to view engagement and interact with this product.</p>
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <button class="btn btn-primary" onclick='handleAddToCart(${JSON.stringify(product.name)}, ${Number(product.price)})'>Add to Cart</button>
+                        <button class="btn btn-outline-danger like-btn ${isProductLiked(product.name) ? "is-liked" : ""}" onclick="toggleLike('${encodedName}')">${isProductLiked(product.name) ? "Liked" : "Like"} (${likeCount})</button>
+                        <span class="btn btn-outline-secondary disabled">Comments (${commentCount})</span>
+                    </div>
+
+                    <div class="comment-panel mt-0 pt-0 border-0">
+                        <div class="comment-list">
+                            ${renderCommentsMarkup(product.name)}
+                        </div>
+
+                        <form class="comment-form" onsubmit="submitComment(event, '${encodedName}')">
+                            <textarea class="form-control mb-2" placeholder="Write a comment"></textarea>
+                            <button type="submit" class="btn btn-sm btn-dark">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function openProductDetails(encodedName) {
+    const productName = decodeURIComponent(encodedName);
+    activeProductName = productName;
+    renderActiveProductDetails();
+    bootstrap.Modal.getOrCreateInstance(productDetailsModalElement).show();
+}
+
+function handleProductCardKeydown(event, encodedName) {
+    if (event.key !== "Enter" && event.key !== " ") {
+        return;
+    }
+
+    event.preventDefault();
+    openProductDetails(encodedName);
+}
+
+function renderActiveProductDetails() {
+    if (!activeProductName) {
+        return;
+    }
+
+    const product = products.find((item) => item.name === activeProductName);
+
+    if (!product) {
+        return;
+    }
+
+    productDetailsTitle.textContent = product.name;
+    productDetailsBody.innerHTML = buildProductDetailsMarkup(product);
+    attachImageFallbacks();
+}
+
+function refreshActiveProductDetails(productName) {
+    if (activeProductName === productName) {
+        renderActiveProductDetails();
+    }
+}
+
+function submitComment(event, encodedName) {
+    event.preventDefault();
+
+    const productName = decodeURIComponent(encodedName);
+    const textarea = event.currentTarget.querySelector("textarea");
+    const text = textarea.value.trim();
+
+    if (!text) {
+        return;
+    }
+
+    const comments = getProductComments();
+    comments[productName] = comments[productName] || [];
+    comments[productName].unshift({
+        text,
+        createdAt: new Date().toLocaleString()
+    });
+
+    saveProductComments(comments);
+    textarea.value = "";
+    refreshActiveProductDetails(productName);
+}
+
+function deleteComment(encodedName, index) {
+    const productName = decodeURIComponent(encodedName);
+    const comments = getProductComments();
+
+    if (!comments[productName]) {
+        return;
+    }
+
+    comments[productName].splice(index, 1);
+
+    if (comments[productName].length === 0) {
+        delete comments[productName];
+    }
+
+    saveProductComments(comments);
+    refreshActiveProductDetails(productName);
+}
+
+function handleAddToCart(name, price) {
+    addToCart(name, price);
+    showCartStatus(`${name} added to cart.`);
+}
+
+function showCartStatus(message) {
+    if (!cartStatus) {
+        return;
+    }
+
+    cartStatus.textContent = message;
+    cartStatus.classList.remove("d-none");
+
+    clearTimeout(cartStatusTimer);
+    cartStatusTimer = setTimeout(() => {
+        cartStatus.classList.add("d-none");
+    }, 2000);
+}
+
+function getSearchQuery() {
+    return new URLSearchParams(window.location.search).get("search") || "";
+}
+
+function normalizeSearchValue(value) {
+    return String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function filterProducts(query) {
+    const trimmedQuery = query.trim();
+    const normalizedQuery = normalizeSearchValue(trimmedQuery);
+
+    if (!normalizedQuery) {
+        return products;
+    }
+
+    return products.filter((product) => normalizeSearchValue(product.name).includes(normalizedQuery));
+}
+
+function updateSearchStatus(query, results) {
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) {
+        searchStatus.textContent = `Showing all ${products.length} products.`;
+        return;
+    }
+
+    searchStatus.textContent = `${results.length} result${results.length === 1 ? "" : "s"} for "${trimmedQuery}".`;
+}
+
+function applySearch(query, updateUrl = true) {
+    const results = filterProducts(query);
+    renderProducts(results);
+    updateSearchStatus(query, results);
+
+    if (updateUrl) {
+        const url = query.trim() ? `?search=${encodeURIComponent(query.trim())}` : window.location.pathname.split("/").pop();
+        window.history.replaceState({}, "", url);
+    }
+}
+
+function normalizeProduct(product) {
+    const visuals = productVisuals[product.name] || {};
+
+    return {
+        ...product,
+        price: Number(product.price),
+        image: visuals.image,
+        colors: visuals.colors
+    };
+}
+
+async function fetchProducts() {
+    const response = await fetch(`${apiBase}/api/products`);
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch products");
+    }
+
+    const data = await response.json();
+    return data.map(normalizeProduct);
+}
+
+async function loadProducts() {
+    try {
+        products = await fetchProducts();
+        const initialQuery = getSearchQuery();
+
+        if (navSearchInput) {
+            navSearchInput.value = initialQuery;
+        }
+
+        applySearch(initialQuery, false);
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load products");
+    }
+}
+
+if (navSearchInput) {
+    navSearchInput.addEventListener("input", () => {
+        applySearch(navSearchInput.value, false);
+    });
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
