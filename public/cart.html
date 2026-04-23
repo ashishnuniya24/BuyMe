@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - BuyMe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark site-navbar sticky-top px-3 px-lg-4 py-3">
+    <div class="container-fluid px-0">
+        <a class="navbar-brand fw-bold" href="index.html">BuyMe</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siteNav" aria-controls="siteNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="siteNav">
+            <ul class="navbar-nav mx-auto align-items-lg-center gap-lg-3">
+                <li class="nav-item"><a class="nav-link nav-pill" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="products.html">Products</a></li>
+                <li class="nav-item"><a class="nav-link active nav-pill" href="cart.html">Cart <span id="cart-count" class="badge rounded-pill text-bg-light d-none">0</span></a></li>
+                <li class="nav-item"><a class="nav-link nav-pill" href="feedback.html">Feedback</a></li>
+            </ul>
+
+            <form class="site-search js-nav-search-form me-lg-3" autocomplete="off">
+                <div class="input-group">
+                    <input type="search" class="form-control js-nav-search-input" placeholder="Search products">
+                    <button type="submit" class="btn btn-light text-primary">Search</button>
+                </div>
+            </form>
+
+            <div class="d-flex gap-2 site-actions">
+                <a href="login.html" class="btn btn-outline-light">Login</a>
+                <a href="signup.html" class="btn btn-info text-dark">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <h2 class="fw-bold text-center mb-4">Your Cart</h2>
+    <div id="cart-items" class="row g-3"></div>
+    <h4 class="text-center mt-4" id="total"></h4>
+
+    <div class="text-center mt-3">
+        <button class="btn btn-danger" onclick="clearCart()">Clear Cart</button>
+    </div>
+</div>
+
+<footer class="footer text-center py-3">
+    © 2026 BuyMe. All rights reserved.
+</footer>
+
+<script src="cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function displayCart() {
+    let cart = getCart();
+    let container = document.getElementById("cart-items");
+    let totalElement = document.getElementById("total");
+
+    container.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+        container.innerHTML = "<p class='text-center'>Your cart is empty</p>";
+        totalElement.innerText = "";
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+
+        container.innerHTML += `
+            <div class="col-md-4">
+                <div class="card p-3 text-center h-100">
+                    <h5>${item.name}</h5>
+                    <p>$${item.price}</p>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <button class="btn btn-danger btn-sm" onclick="decreaseQuantity(${index})">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="btn btn-success btn-sm" onclick="increaseQuantity(${index})">+</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    totalElement.innerText = "Total: $" + total.toFixed(2);
+}
+
+displayCart();
+</script>
+
+</body>
+</html>
