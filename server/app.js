@@ -13,23 +13,9 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
-["index.css", "cart.js"].forEach((fileName) => {
-    app.get(`/${fileName}`, (req, res) => {
-        const folder = fileName.endsWith(".css") ? "css" : "js";
-        res.sendFile(path.join(__dirname, "..", "public", folder, fileName));
-    });
-});
-
-["index", "products", "cart", "login", "signup"].forEach((pageName) => {
+["index", "products", "cart", "login", "signup", "feedback"].forEach((pageName) => {
     app.get(`/${pageName}.html`, (req, res) => {
-        const rootPagePath = path.join(__dirname, "..", "public", `${pageName}.html`);
-        const fallbackPagePath = path.join(__dirname, "..", "public", "pages", `${pageName}.html`);
-
-        res.sendFile(rootPagePath, (error) => {
-            if (error) {
-                res.sendFile(fallbackPagePath);
-            }
-        });
+        res.sendFile(path.join(__dirname, "..", "public", `${pageName}.html`));
     });
 });
 
