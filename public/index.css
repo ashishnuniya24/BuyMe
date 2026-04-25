@@ -67,7 +67,7 @@ body {
 
 .site-search {
     position: relative;
-    width: min(100%, 320px);
+    width: min(100%, 280px);
 }
 
 .site-search .input-group {
@@ -79,11 +79,11 @@ body {
 }
 
 .site-search .form-control {
-    min-height: 42px;
+    min-height: 38px;
     border: 0;
     background: transparent;
     color: #ffffff;
-    padding-inline: 0.95rem;
+    padding-inline: 0.8rem;
 }
 
 .site-search .form-control::placeholder {
@@ -98,7 +98,7 @@ body {
 
 .site-search .btn {
     border-radius: 999px;
-    min-width: 92px;
+    min-width: 80px;
     font-weight: 700;
 }
 
