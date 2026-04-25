@@ -89,6 +89,25 @@ const productVisuals = {
     "Earbuds": { image: "https://ptron.in/cdn/shop/files/B0CNZD2DMS.MAIN.jpg?v=1709619012", colors: ["#4f46e5", "#818cf8"] }
 };
 
+const productDescriptions = {
+    "Headphones": "Wireless headphones designed for everyday listening, with a lightweight frame, cushioned ear cups, and clear stereo sound for music, calls, and study sessions.",
+    "Smart Watch": "A compact smart watch that helps users track activity, monitor notifications, and keep daily routines organized through a simple touch display.",
+    "Mouse": "An ergonomic wireless mouse built for smooth navigation, precise cursor control, and comfortable long-hour use at home, school, or work.",
+    "Keyboard": "A slim keyboard with responsive keys that supports fast typing, reliable everyday use, and a tidy desk setup for work or study.",
+    "USB-C Cable": "A durable USB-C cable suitable for charging compatible devices and transferring data quickly between phones, tablets, laptops, and accessories.",
+    "Laptop Stand": "An adjustable laptop stand that improves screen height, supports better posture, and helps create a more comfortable workspace.",
+    "Speaker": "A portable speaker that delivers balanced sound, simple wireless connectivity, and convenient playback for indoor and outdoor listening.",
+    "Phone Holder": "A stable phone holder that keeps a device upright for video calls, media viewing, reading, and hands-free desk use.",
+    "Webcam": "A high-definition webcam suitable for online meetings, classes, and streaming, with clear video capture and easy setup.",
+    "External SSD": "A compact external SSD offering fast file transfers and reliable portable storage for documents, photos, videos, and project backups.",
+    "Power Bank": "A portable power bank designed to recharge devices on the go, making it useful for travel, commuting, and long days away from a wall outlet.",
+    "Monitor": "A widescreen monitor that provides a larger viewing area for multitasking, media use, office work, and general productivity.",
+    "Tablet": "A lightweight tablet suited for browsing, reading, streaming, note taking, and everyday mobile productivity.",
+    "Phone Case": "A protective phone case created to help guard against scratches and light impacts while keeping the device comfortable to hold.",
+    "Charger": "A fast wall charger designed for efficient charging of compatible devices, with dependable power delivery for daily use.",
+    "Earbuds": "Compact wireless earbuds that provide convenient listening, portable comfort, and clear sound for calls, music, and everyday movement."
+};
+
 const navSearchInput = document.getElementById("nav-search-input");
 const searchStatus = document.getElementById("search-status");
 const cartStatus = document.getElementById("cart-status");
@@ -303,6 +322,7 @@ function buildProductDetailsMarkup(product) {
     const encodedName = encodeURIComponent(product.name);
     const image = getProductImageData(product);
     const safeName = escapeHtml(product.name);
+    const safeDescription = escapeHtml(product.description || "Product details are available in the listing view.");
     const likeCount = getLikeCount(product.name);
     const commentCount = getCommentsForProduct(product.name).length;
     const isWishlisted = isProductWishlisted(product.name);
@@ -318,7 +338,7 @@ function buildProductDetailsMarkup(product) {
                 <div class="product-detail-meta">
                     <h3 class="fw-bold mb-2">${safeName}</h3>
                     <p class="fs-4 text-primary fw-semibold mb-3">$${Number(product.price).toFixed(2)}</p>
-                    <p class="text-muted mb-4">Open the product details to view engagement and interact with this product.</p>
+                    <p class="text-muted mb-4">${safeDescription}</p>
                     <div class="d-flex flex-wrap gap-2 mb-4">
                         <button class="btn btn-primary" onclick='handleAddToCart(${JSON.stringify(product.name)}, ${Number(product.price)}, ${JSON.stringify(image)}, ${serializeColors(product.colors)}, ${Number(product.id)})'>Add to Cart</button>
                         <button class="btn wishlist-btn ${isWishlisted ? "is-active" : ""}" type="button" aria-label="${isWishlisted ? "Remove from wishlist" : "Add to wishlist"}" title="${isWishlisted ? "Remove from wishlist" : "Add to wishlist"}" onclick='toggleWishlist(${JSON.stringify(product.name)}, ${Number(product.price)}, ${JSON.stringify(image)}, ${serializeColors(product.colors)}, ${Number(product.id)})'>${isWishlisted ? "♥" : "♡"}</button>
@@ -519,7 +539,8 @@ function normalizeProduct(product) {
         ...product,
         price: Number(product.price),
         image: visuals.image,
-        colors: visuals.colors
+        colors: visuals.colors,
+        description: productDescriptions[product.name]
     };
 }
 
