@@ -48,6 +48,57 @@ function updateNavWishlistCount() {
     badge.classList.toggle("d-none", count === 0);
 }
 
+function getCurrentUser() {
+    const storedUser = localStorage.getItem("currentUser");
+
+    if (!storedUser) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(storedUser);
+    } catch (err) {
+        console.error("Failed to parse currentUser", err);
+        return null;
+    }
+}
+
+function logoutCurrentUser() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("currentUser");
+    updateNavbarAuthState();
+    window.location.href = "index.html";
+}
+
+function updateNavbarAuthState() {
+    const actions = document.querySelector(".site-actions");
+
+    if (!actions) {
+        return;
+    }
+
+    const currentUser = getCurrentUser();
+
+    if (!currentUser || !currentUser.name) {
+        actions.innerHTML = `
+            <a href="login.html" class="btn btn-outline-light">Login</a>
+            <a href="signup.html" class="btn btn-info text-dark">Sign Up</a>
+        `;
+        return;
+    }
+
+    actions.innerHTML = `
+        <span class="btn btn-light disabled">${currentUser.name}</span>
+        <button type="button" class="btn btn-outline-light js-logout-btn">Logout</button>
+    `;
+
+    const logoutButton = actions.querySelector(".js-logout-btn");
+
+    if (logoutButton) {
+        logoutButton.addEventListener("click", logoutCurrentUser);
+    }
+}
+
 function getSearchApiBase() {
     return window.location.port === "5500" || window.location.protocol === "file:" ? "http://localhost:3000" : "";
 }
@@ -257,6 +308,7 @@ function clearCart() {
 document.addEventListener("DOMContentLoaded", () => {
     updateNavCartCount();
     updateNavWishlistCount();
+    updateNavbarAuthState();
     setupNavbarSearchForms();
     setupNavbarSearchSuggestions();
 });
