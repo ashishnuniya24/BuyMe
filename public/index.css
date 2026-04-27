@@ -204,6 +204,390 @@ body {
     position: relative;
 }
 
+.homepage-hero {
+    padding-top: 1rem;
+    padding-bottom: 0.25rem;
+}
+
+.hero-banner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 1.2rem;
+    align-items: center;
+    overflow: hidden;
+    padding: 1.85rem 2.2rem 1.4rem;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top center, rgba(13, 110, 253, 0.16), transparent 26%),
+        linear-gradient(90deg, #eff8ff 0%, #dff1ff 48%, #caebff 100%);
+    box-shadow: 0 24px 60px rgba(18, 38, 63, 0.12);
+    min-height: 270px;
+}
+
+.hero-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 30%, rgba(255, 255, 255, 0.16));
+    pointer-events: none;
+}
+
+.hero-copy,
+.hero-scene {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-copy {
+    max-width: 400px;
+}
+
+.hero-eyebrow {
+    display: inline-flex;
+    margin-bottom: 0.9rem;
+    padding: 0.38rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(13, 110, 253, 0.12);
+    color: var(--brand);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.hero-banner h1 {
+    margin-bottom: 0.75rem;
+    font-size: clamp(1.95rem, 4.1vw, 3rem);
+    line-height: 1.04;
+    font-weight: 800;
+    color: #172033;
+}
+
+.hero-banner p {
+    max-width: 330px;
+    margin-bottom: 1.1rem;
+    color: #55627b;
+    font-size: 0.97rem;
+}
+
+.hero-cta {
+    min-width: 124px;
+    border-radius: 12px;
+    padding: 0.72rem 1.15rem;
+    font-weight: 700;
+    box-shadow: 0 14px 24px rgba(13, 110, 253, 0.22);
+}
+
+.hero-scene {
+    min-height: 205px;
+}
+
+.hero-cart-graphic {
+    position: absolute;
+    right: 2.8rem;
+    bottom: 1.55rem;
+    width: 210px;
+    height: 136px;
+    transform: rotate(-2deg);
+}
+
+.cart-handle {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 74px;
+    height: 9px;
+    border-radius: 999px;
+    background: #7094b8;
+    transform: rotate(21deg);
+    transform-origin: right center;
+}
+
+.cart-basket {
+    position: absolute;
+    right: 22px;
+    top: 26px;
+    width: 150px;
+    height: 86px;
+    border: 5px solid #97a9bf;
+    border-radius: 10px 10px 18px 18px;
+    background:
+        linear-gradient(90deg, transparent 0 18%, rgba(151, 169, 191, 0.9) 18% 20%, transparent 20% 38%, rgba(151, 169, 191, 0.9) 38% 40%, transparent 40% 58%, rgba(151, 169, 191, 0.9) 58% 60%, transparent 60% 78%, rgba(151, 169, 191, 0.9) 78% 80%, transparent 80%),
+        linear-gradient(180deg, transparent 0 24%, rgba(151, 169, 191, 0.9) 24% 27%, transparent 27% 52%, rgba(151, 169, 191, 0.9) 52% 55%, transparent 55% 80%, rgba(151, 169, 191, 0.9) 80% 83%, transparent 83%),
+        rgba(255, 255, 255, 0.4);
+    box-shadow: 0 16px 24px rgba(90, 116, 145, 0.18);
+}
+
+.cart-base {
+    position: absolute;
+    left: 26px;
+    right: 12px;
+    bottom: 16px;
+    height: 6px;
+    border-radius: 999px;
+    background: #8b9fb6;
+    transform: rotate(-8deg);
+}
+
+.cart-wheel {
+    position: absolute;
+    bottom: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 5px solid #6f8197;
+    background: #d5dee8;
+}
+
+.wheel-left {
+    left: 56px;
+}
+
+.wheel-right {
+    right: 30px;
+}
+
+.cart-box,
+.hero-floor-box {
+    position: absolute;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #d6b18a 0%, #c99763 100%);
+    box-shadow: 0 14px 24px rgba(122, 88, 51, 0.18);
+}
+
+.cart-box::before,
+.hero-floor-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 46%);
+}
+
+.box-one {
+    width: 50px;
+    height: 42px;
+    left: 84px;
+    top: 18px;
+}
+
+.box-two {
+    width: 56px;
+    height: 46px;
+    left: 122px;
+    top: 8px;
+}
+
+.box-three {
+    width: 52px;
+    height: 44px;
+    left: 144px;
+    top: 34px;
+}
+
+.hero-floor-box {
+    width: 64px;
+    height: 52px;
+    right: 1rem;
+    bottom: 0.85rem;
+}
+
+.stack-two {
+    width: 48px;
+    height: 44px;
+    right: 4rem;
+    bottom: 2.95rem;
+}
+
+.hero-plant {
+    position: absolute;
+    right: 0.45rem;
+    top: 0.45rem;
+    width: 108px;
+    height: 154px;
+}
+
+.hero-pot {
+    position: absolute;
+    left: 32px;
+    bottom: 0;
+    width: 62px;
+    height: 72px;
+    border-radius: 10px 10px 18px 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #eef4f8 100%);
+    box-shadow: 0 16px 28px rgba(23, 32, 51, 0.1);
+}
+
+.hero-leaf {
+    position: absolute;
+    bottom: 56px;
+    width: 46px;
+    height: 82px;
+    border-radius: 46px 46px 10px 46px;
+    background: linear-gradient(180deg, #83c557 0%, #2f8f4b 100%);
+    transform-origin: bottom center;
+}
+
+.leaf-one {
+    left: 18px;
+    transform: rotate(-34deg);
+}
+
+.leaf-two {
+    left: 44px;
+    height: 92px;
+    background: linear-gradient(180deg, #98d868 0%, #3f9950 100%);
+}
+
+.leaf-three {
+    left: 70px;
+    transform: rotate(28deg);
+}
+
+@media (max-width: 991.98px) {
+    .hero-banner {
+        grid-template-columns: 1fr;
+        padding: 1.65rem 1.45rem 1.3rem;
+    }
+
+    .hero-copy {
+        max-width: none;
+    }
+
+    .hero-banner p {
+        max-width: none;
+    }
+
+    .hero-scene {
+        min-height: 190px;
+    }
+
+    .hero-plant {
+        right: 0;
+    }
+
+    .hero-cart-graphic {
+        right: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero-banner {
+        padding: 1.5rem 1.2rem;
+        border-radius: 22px;
+    }
+
+    .hero-eyebrow {
+        margin-bottom: 0.7rem;
+    }
+
+    .hero-banner h1 {
+        font-size: 2rem;
+    }
+
+    .hero-banner p {
+        font-size: 0.95rem;
+    }
+
+    .hero-scene {
+        min-height: 225px;
+    }
+
+    .hero-plant {
+        width: 88px;
+        height: 132px;
+        right: -0.35rem;
+        top: 0.35rem;
+    }
+
+    .hero-pot {
+        left: 24px;
+        width: 42px;
+        height: 48px;
+    }
+
+    .hero-leaf {
+        width: 28px;
+        height: 52px;
+        bottom: 38px;
+    }
+
+    .hero-cart-graphic {
+        right: 1.35rem;
+        bottom: 1.25rem;
+        width: 176px;
+        height: 114px;
+    }
+
+    .cart-handle {
+        width: 54px;
+        height: 7px;
+    }
+
+    .cart-basket {
+        right: 15px;
+        top: 22px;
+        width: 112px;
+        height: 64px;
+        border-width: 4px;
+    }
+
+    .cart-base {
+        left: 20px;
+        bottom: 12px;
+    }
+
+    .cart-wheel {
+        width: 19px;
+        height: 19px;
+        border-width: 4px;
+    }
+
+    .wheel-left {
+        left: 42px;
+    }
+
+    .wheel-right {
+        right: 24px;
+    }
+
+    .box-one {
+        width: 36px;
+        height: 30px;
+        left: 62px;
+        top: 20px;
+    }
+
+    .box-two {
+        width: 40px;
+        height: 32px;
+        left: 88px;
+        top: 11px;
+    }
+
+    .box-three {
+        width: 36px;
+        height: 30px;
+        left: 108px;
+        top: 31px;
+    }
+
+    .hero-floor-box {
+        width: 52px;
+        height: 40px;
+        right: 0.4rem;
+        bottom: 0.8rem;
+    }
+
+    .stack-two {
+        width: 40px;
+        height: 34px;
+        right: 2.8rem;
+        bottom: 2.45rem;
+    }
+}
+
 .search-status {
     color: var(--muted);
 }

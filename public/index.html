@@ -53,15 +53,43 @@
     </div>
 </nav>
 
-<section class="hero text-center py-5">
+<section class="homepage-hero py-4 py-lg-5">
     <div class="container">
-        <h1 class="fw-bold">Upgrade Your Tech Life</h1>
-        <p class="text-muted">Find the best gadgets & accessories at unbeatable prices</p>
-        <a href="products.html" class="btn btn-primary btn-lg mt-3">Shop Now</a>
+        <div class="hero-banner">
+            <div class="hero-copy">
+                <span class="hero-eyebrow">New Season Picks</span>
+                <h1>Discover Amazing Products</h1>
+                <p>Shop the latest trends and best deals all in one place.</p>
+                <a href="products.html" class="btn btn-primary hero-cta">Shop Now</a>
+            </div>
+
+            <div class="hero-scene" aria-hidden="true">
+                <div class="hero-plant">
+                    <span class="hero-leaf leaf-one"></span>
+                    <span class="hero-leaf leaf-two"></span>
+                    <span class="hero-leaf leaf-three"></span>
+                    <span class="hero-pot"></span>
+                </div>
+
+                <div class="hero-cart-graphic">
+                    <span class="cart-handle"></span>
+                    <span class="cart-basket"></span>
+                    <span class="cart-base"></span>
+                    <span class="cart-wheel wheel-left"></span>
+                    <span class="cart-wheel wheel-right"></span>
+                    <span class="cart-box box-one"></span>
+                    <span class="cart-box box-two"></span>
+                    <span class="cart-box box-three"></span>
+                </div>
+
+                <div class="hero-floor-box stack-one"></div>
+                <div class="hero-floor-box stack-two"></div>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="container py-5">
+<section class="container pt-3 pb-5">
 
     <div class="text-center mb-4">
         <p class="featured-kicker mb-2">Top Picks</p>
@@ -71,7 +99,7 @@
 
     <div class="row g-4">
 
-        <div class="col-md-4">
+        <div class="col-lg-3 col-md-6">
             <div class="card p-3 text-center h-100 featured-product">
                 <div class="product-image-wrap">
                     <img class="product-image" src="" data-product-image="Headphones" alt="Headphones">
@@ -83,7 +111,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-lg-3 col-md-6">
             <div class="card p-3 text-center h-100 featured-product">
                 <div class="product-image-wrap">
                     <img class="product-image" src="" data-product-image="Smart Watch" alt="Smart Watch">
@@ -95,7 +123,7 @@
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-lg-3 col-md-6">
             <div class="card p-3 text-center h-100 featured-product">
                 <div class="product-image-wrap">
                     <img class="product-image" src="" data-product-image="Mouse" alt="Gaming Mouse">
@@ -104,6 +132,18 @@
                 <h5>Mouse</h5>
                 <p>$29.99</p>
                 <a href="products.html?search=Mouse" class="btn btn-outline-primary">View Product</a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card p-3 text-center h-100 featured-product">
+                <div class="product-image-wrap">
+                    <img class="product-image" src="" data-product-image="Keyboard" alt="Keyboard">
+                </div>
+                <span class="featured-chip">Desk Setup</span>
+                <h5>Keyboard</h5>
+                <p>$49.99</p>
+                <a href="products.html?search=Keyboard" class="btn btn-outline-primary">View Product</a>
             </div>
         </div>
 
@@ -130,6 +170,10 @@ const featuredProducts = {
     Mouse: {
         image: "https://static.elisa.com/v2/image/2tqybbhjs47b/2FzjzMaM8aKil9McXFkbxN/Signature+M650+-langaton+hiiri+Graphite.jpeg?w=800&fm=avif&env=master&q=75",
         colors: ["#2f80ed", "#6dd5fa"]
+    },
+    Keyboard: {
+        image: "https://cdn.verk.net/kuvastin/w:1125/h:703/rt:fit/q:80/ex:1/sh:0.5/plain/images/15/2_1018847-1280x509.jpg",
+        colors: ["#1d4ed8", "#38bdf8"]
     }
 };
 
