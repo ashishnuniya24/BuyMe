@@ -97,56 +97,8 @@
         <p class="text-muted mb-0">A few popular accessories customers usually check first.</p>
     </div>
 
-    <div class="row g-4">
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card p-3 text-center h-100 featured-product">
-                <div class="product-image-wrap">
-                    <img class="product-image" src="" data-product-image="Headphones" alt="Headphones">
-                </div>
-                <span class="featured-chip">Wireless Audio</span>
-                <h5>Headphones</h5>
-                <p>$59.99</p>
-                <a href="products.html?search=Headphones" class="btn btn-outline-primary">View Product</a>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card p-3 text-center h-100 featured-product">
-                <div class="product-image-wrap">
-                    <img class="product-image" src="" data-product-image="Smart Watch" alt="Smart Watch">
-                </div>
-                <span class="featured-chip">Fitness Tracker</span>
-                <h5>Smart Watch</h5>
-                <p>$99.99</p>
-                <a href="products.html?search=Smart%20Watch" class="btn btn-outline-primary">View Product</a>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-md-6">
-            <div class="card p-3 text-center h-100 featured-product">
-                <div class="product-image-wrap">
-                    <img class="product-image" src="" data-product-image="Mouse" alt="Gaming Mouse">
-                </div>
-                <span class="featured-chip">Work And Play</span>
-                <h5>Mouse</h5>
-                <p>$29.99</p>
-                <a href="products.html?search=Mouse" class="btn btn-outline-primary">View Product</a>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card p-3 text-center h-100 featured-product">
-                <div class="product-image-wrap">
-                    <img class="product-image" src="" data-product-image="Keyboard" alt="Keyboard">
-                </div>
-                <span class="featured-chip">Desk Setup</span>
-                <h5>Keyboard</h5>
-                <p>$49.99</p>
-                <a href="products.html?search=Keyboard" class="btn btn-outline-primary">View Product</a>
-            </div>
-        </div>
-
+    <div class="row g-4" id="featured-products-list">
+        <!-- Featured products will be rendered here -->
     </div>
 
 </section>
@@ -154,34 +106,43 @@
 <footer class="footer text-center py-3">
     © 2026 BuyMe. All rights reserved...
 </footer>
-
 <script src="cart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-const featuredProducts = {
-    Headphones: {
-        image: "https://static.elisa.com/v2/image/2tqybbhjs47b/5RmJKFGCCBgbtcju1NYGnR/WH-CH520+Bluetooth+kuuloke+Sininen.jpeg?w=800&fm=avif&env=master&q=75",
-        colors: ["#0d6efd", "#56ccf2"]
-    },
-    "Smart Watch": {
-        image: "https://teknikspot.shop/cdn/shop/files/Xiaomi_smart_band_9_mystic_rose1.webp?v=1762098745&width=493",
-        colors: ["#0b2348", "#3cc8ff"]
-    },
-    Mouse: {
-        image: "https://static.elisa.com/v2/image/2tqybbhjs47b/2FzjzMaM8aKil9McXFkbxN/Signature+M650+-langaton+hiiri+Graphite.jpeg?w=800&fm=avif&env=master&q=75",
-        colors: ["#2f80ed", "#6dd5fa"]
-    },
-    Keyboard: {
-        image: "https://cdn.verk.net/kuvastin/w:1125/h:703/rt:fit/q:80/ex:1/sh:0.5/plain/images/15/2_1018847-1280x509.jpg",
-        colors: ["#1d4ed8", "#38bdf8"]
-    }
+const apiBase = "http://localhost:3000";
+
+// Same visuals as products.html
+const productVisuals = {
+    "Headphones": { image: "https://static.elisa.com/v2/image/2tqybbhjs47b/5RmJKFGCCBgbtcju1NYGnR/WH-CH520+Bluetooth+kuuloke+Sininen.jpeg?w=800&fm=avif&env=master&q=75", colors: ["#0d6efd", "#56ccf2"] },
+    "Smart Watch": { image: "https://teknikspot.shop/cdn/shop/files/Xiaomi_smart_band_9_mystic_rose1.webp?v=1762098745&width=493", colors: ["#0b2348", "#3cc8ff"] },
+    "Mouse": { image: "https://static.elisa.com/v2/image/2tqybbhjs47b/2FzjzMaM8aKil9McXFkbxN/Signature+M650+-langaton+hiiri+Graphite.jpeg?w=800&fm=avif&env=master&q=75", colors: ["#2f80ed", "#6dd5fa"] },
+    "Keyboard": { image: "https://cdn.verk.net/kuvastin/w:1125/h:703/rt:fit/q:80/ex:1/sh:0.5/plain/images/15/2_1018847-1280x509.jpg", colors: ["#1d4ed8", "#38bdf8"] },
+    "USB-C Cable": { image: "https://i0.wp.com/shop.huvipiste.fi/wp-content/uploads/2024/10/MU2G3ZM-cde.png?w=812&ssl=1", colors: ["#2563eb", "#93c5fd"] },
+    "Laptop Stand": { image: "https://cdnprod.inky.se/medias/sys_master/root/hd1/hfb/10411286691870/5030578458823.webp", colors: ["#0891b2", "#67e8f9"] },
+    "Speaker": { image: "https://noerdic.fi/cdn/shop/files/Bluetoothkaiutin36WkannettavakaiutinstereonipohjallaBluetooth53langatonIP7xvedenpitvkaiutinsininenBluetoothKaiutin36WKannettavaKaiutinStereonipohjallaBluetooth53LangatonIp7XVedenpitvK.jpg?v=1763654411&width=1000", colors: ["#7c3aed", "#60a5fa"] },
+    "Phone Holder": { image: "https://gsmnet.fi/cdn/shop/files/suport-birou-hoco-excelente-1-1614602508.jpg?v=1772639527&width=493", colors: ["#0f766e", "#5eead4"] },
+    "Webcam": { image: "https://noerdic.fi/cdn/shop/files/4KWebcamHD8MPSonySensorAutofocusMicrophonePrivacyCoverandTripod4KWebcamHd8MpSonySensorAutofocusMicrophonePrivacyCoverAndTripod_a5558062-6f91-4284-97f9-0bd10b36a976.jpg?v=1763654745&width=800", colors: ["#4338ca", "#93c5fd"] },
+    "External SSD": { image: "https://cdnprod.inky.se/medias/sys_master/root/h57/hb7/10789642600478/TS2TSJ25M3S.webp", colors: ["#1e3a8a", "#60a5fa"] },
+    "Power Bank": { image: "https://cdnprod.inky.se/medias/sys_master/root/hd4/h13/10789496389662/406020.webp", colors: ["#0369a1", "#7dd3fc"] },
+    "Monitor": { image: "https://tkvfinland.fi/wp-content/uploads/2025/04/IMG_0276.webp", colors: ["#1f2937", "#60a5fa"] },
+    "Tablet": { image: "https://i0.wp.com/tradeup.fi/wp-content/uploads/2021/12/ipad-7-wifi-cellular.png?w=600&ssl=1", colors: ["#312e81", "#38bdf8"] },
+    "Phone Case": { image: "https://gsmnet.fi/cdn/shop/files/husa-magsafe-pentru-apple-iphone-17-pro-max-techsuit-halofrost-ii-portocalie-1762255595591.jpg?v=1762872733&width=493", colors: ["#0f172a", "#38bdf8"] },
+    "Charger": { image: "https://static.elisa.com/v2/image/2tqybbhjs47b/7LvpqyuD2C4DrISFJ5yKR9/45W+Power+Charger+%2B+C+to+C-Kaapeli+%282024%29.jpeg?w=800&fm=avif&env=master&q=75", colors: ["#1d4ed8", "#22d3ee"] },
+    "Earbuds": { image: "https://ptron.in/cdn/shop/files/B0CNZD2DMS.MAIN.jpg?v=1709619012", colors: ["#4f46e5", "#818cf8"] }
 };
 
-function getFallbackProductImage(productName, colors) {
-    const [primary, secondary] = colors || ["#0d6efd", "#8ec5ff"];
-    const label = productName.length > 16 ? `${productName.slice(0, 13)}...` : productName;
+function getProductImageData(product) {
+    if (product.image) return product.image;
+    if (productVisuals[product.name] && productVisuals[product.name].image) return productVisuals[product.name].image;
+    return getFallbackProductImage(product);
+}
+
+function getFallbackProductImage(product) {
+    const visuals = productVisuals[product.name] || {};
+    const [primary, secondary] = product.colors || visuals.colors || ["#0d6efd", "#8ec5ff"];
+    const label = product.name.length > 16 ? `${product.name.slice(0, 13)}...` : product.name;
     const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="${productName}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="${product.name}">
             <defs>
                 <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stop-color="${primary}" />
@@ -196,20 +157,68 @@ function getFallbackProductImage(productName, colors) {
             <text x="320" y="230" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="${primary}">${label}</text>
             <text x="320" y="380" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="white" letter-spacing="6">BUYME</text>
         </svg>`;
-
     return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-document.querySelectorAll("[data-product-image]").forEach((image) => {
-    const productName = image.dataset.productImage;
-    const config = featuredProducts[productName] || {};
-    image.src = config.image || getFallbackProductImage(productName, config.colors);
-    image.onerror = () => {
-        image.onerror = null;
-        image.src = getFallbackProductImage(productName, config.colors);
-    };
-});
+function renderFeaturedProducts(products) {
+    const container = document.getElementById("featured-products-list");
+    container.innerHTML = "";
+    if (!products.length) {
+        container.innerHTML = `<div class='col-12'><div class='card p-4 text-center'>No featured products found.</div></div>`;
+        return;
+    }
+    products.forEach(product => {
+        const image = getProductImageData(product);
+        const safeName = String(product.name).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        container.innerHTML += `
+            <div class="col-lg-3 col-md-6">
+                <div class="card p-3 text-center h-100 featured-product">
+                    <div class="product-image-wrap">
+                        <img class="product-image" src="${image}" alt="${safeName}" data-product-name="${safeName}" data-product-colors='${JSON.stringify(product.colors || (productVisuals[product.name]?.colors || []))}'>
+                    </div>
+                    <h5>${safeName}</h5>
+                    <p>$${Number(product.price).toFixed(2)}</p>
+                    <a href="products.html?search=${encodeURIComponent(product.name)}" class="btn btn-outline-primary">View Product</a>
+                </div>
+            </div>
+        `;
+    });
+    attachImageFallbacks();
+}
+
+function attachImageFallbacks() {
+    document.querySelectorAll(".product-image").forEach((image) => {
+        if (image.dataset.fallbackBound === "true") return;
+        image.dataset.fallbackBound = "true";
+        image.onerror = () => {
+            image.onerror = null;
+            image.src = getFallbackProductImage({
+                name: image.dataset.productName,
+                colors: image.dataset.productColors ? JSON.parse(image.dataset.productColors) : undefined
+            });
+        };
+    });
+}
+
+async function fetchProducts() {
+    const response = await fetch(`${apiBase}/api/products`);
+    if (!response.ok) throw new Error("Failed to fetch products");
+    return await response.json();
+}
+
+async function loadFeaturedProducts() {
+    try {
+        let products = await fetchProducts();
+        // Show first 4 products as featured
+        renderFeaturedProducts(products.slice(0, 4));
+    } catch (err) {
+        document.getElementById("featured-products-list").innerHTML = `<div class='col-12'><div class='card p-4 text-center'>Failed to load products.</div></div>`;
+    }
+}
+
+loadFeaturedProducts();
 </script>
+
 
 </body>
 </html>
