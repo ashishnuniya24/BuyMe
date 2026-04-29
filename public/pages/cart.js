@@ -100,7 +100,7 @@ function updateNavbarAuthState() {
 }
 
 function getSearchApiBase() {
-    return window.location.port === "5500" || window.location.protocol === "file:" ? "http://localhost:3000" : "";
+    return window.location.port === "5500" || window.location.protocol === "file:" ? "https://buyme-h69i.onrender.com" : "";
 }
 
 function normalizeSearchTerm(value) {
