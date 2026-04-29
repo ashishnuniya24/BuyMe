@@ -114,7 +114,7 @@ const cartStatus = document.getElementById("cart-status");
 const productDetailsModalElement = document.getElementById("product-details-modal");
 const productDetailsTitle = document.getElementById("product-details-title");
 const productDetailsBody = document.getElementById("product-details-body");
-const apiBase = window.location.port === "5500" || window.location.protocol === "file:" ? "http://localhost:3000" : "";
+const apiBase = "http://localhost:3000";
 let products = [];
 let activeProductName = null;
 let cartStatusTimer;
