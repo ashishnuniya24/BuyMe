@@ -41,6 +41,13 @@ app.use("/api/orders", require("./routes/orderRoutes"));
 
 const PORT = process.env.PORT || 3000;
 
+
+// Global error handler (must be after all routes)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: "Internal server error" });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
